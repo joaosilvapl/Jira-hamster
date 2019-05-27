@@ -1,3 +1,3 @@
 # Jirasol
 
-Jirasol - a chrome extension for improving productivity when working with Jira on a Chrome browser.
+An extension to Google Chrome's browser for boosting productivity while working with Jira.
