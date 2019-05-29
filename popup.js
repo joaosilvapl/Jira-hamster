@@ -21,7 +21,7 @@ changeColor.onclick = function (element) {
                             var contextMenuOtherActionsSection = $(".aui-last");
                 
                             if (contextMenuOtherActionsSection.length > 0) {
-                                contextMenuOtherActionsSection.css('background-color', 'blue');
+                                contextMenuOtherActionsSection.append('<li class="aui-list-item"><a onclick="alert(123);return false;" class="aui-list-item-link js-context-menu-action" title="Copy info to clipboard" href="#">Copy info to clipboard</a></li>');
                             }
                 
                         }, 100);
