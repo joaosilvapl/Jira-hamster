@@ -6,8 +6,6 @@ printMessage = (message) => {
 
 getCardInfoStorageKey = (cardId) => cardInfoStoragePrefix + cardId;
 
-var cardId1 = getCardInfoStorageKey(1);
-
 saveCardInfo = (cardId, info) => {
   var key = cardInfoStoragePrefix + cardId;
   chrome.storage.sync.set({ [key]: info }, () => {
@@ -15,9 +13,15 @@ saveCardInfo = (cardId, info) => {
   });
 }
 
-chrome.storage.sync.get(cardId1, (obj) => {
-  printMessage(`${cardId1} = ${obj[cardId1]}`);
-});
+getCardInfo = (cardId, callback) => {
+  var key = cardInfoStoragePrefix + cardId;
+
+  chrome.storage.sync.get(key, (obj) => {
+    var value = obj[key];
+    printMessage(`${key} = ${value}`);
+    callback(value);
+  });
+}
 
 printMessage(`jQuery type: ${typeof (jQuery)}`);
 
@@ -25,6 +29,9 @@ if (!jQuery || !$) {
   printMessage("jQuery not loaded");
 }
 else {
+
+getCardInfo(1, x => printMessage(`Current value for cardId 1 = ${x}`));
+
   var cardIdElements = $(".ghx-key[aria-label]");
 
   printMessage(`Found cards: ${cardIdElements.length}`);
