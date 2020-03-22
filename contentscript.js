@@ -30,23 +30,22 @@ if (!jQuery || !$) {
 }
 else {
 
-getCardInfo(1, x => printMessage(`Current value for cardId 1 = ${x}`));
-
   var cardIdElements = $(".ghx-key[aria-label]");
 
   printMessage(`Found cards: ${cardIdElements.length}`);
 
   var cardIds = $(cardIdElements).map((index, value) => $(value).attr('aria-label'));
 
-  cardIds.each((index, value) => printMessage(value));
+  var now = new Date().toString();
+
+  cardIds.each((index, value) => {
+
+    printMessage(value);
+
+    getCardInfo(value, x => printMessage(`Current value for card ${value} = ${x}`));
+
+    saveCardInfo(value, `${value} + ${now}`);
+
+  });
+
 }
-
-var value = new Date().toString();
-
-saveCardInfo(1, value);
-
-
-
-
-
-
