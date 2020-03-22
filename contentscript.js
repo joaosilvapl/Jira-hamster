@@ -1,3 +1,4 @@
+const allCardIdsStorageKey = "allCardIds";
 const cardInfoStoragePrefix = "cardInfo";
 
 printMessage = (message) => {
@@ -6,21 +7,30 @@ printMessage = (message) => {
 
 getCardInfoStorageKey = (cardId) => cardInfoStoragePrefix + cardId;
 
+saveInfo = (key, info, callback) => {
+  chrome.storage.sync.set({ [key]: info }, () => {
+    callback(key, info);
+  });
+}
+
+getInfo = (key, callback) => {
+  chrome.storage.sync.get(key, (obj) => {
+    var value = obj[key];
+    callback(key, value);
+  });
+};
+
 saveCardInfo = (cardId, info) => {
   var key = cardInfoStoragePrefix + cardId;
-  chrome.storage.sync.set({ [key]: info }, () => {
-    printMessage(`Info stored for card ${cardId}: ${key} = ${info}`);
+  saveInfo(key, info, (x, y) => {
+    printMessage(`Info stored for card ${cardId}: ${x} = ${y}`);
   });
 }
 
 getCardInfo = (cardId, callback) => {
   var key = cardInfoStoragePrefix + cardId;
 
-  chrome.storage.sync.get(key, (obj) => {
-    var value = obj[key];
-    printMessage(`${key} = ${value}`);
-    callback(value);
-  });
+  getInfo(key, (x, y) => callback(x, y));
 }
 
 printMessage(`jQuery type: ${typeof (jQuery)}`);
@@ -34,18 +44,23 @@ else {
 
   printMessage(`Found cards: ${cardIdElements.length}`);
 
-  var cardIds = $(cardIdElements).map((index, value) => $(value).attr('aria-label'));
+  var cardIds = $(cardIdElements).map((index, value) => $(value).attr('aria-label')).get();
 
-  var now = new Date().toString();
+  var cardIdsInfo = cardIds;
 
-  cardIds.each((index, value) => {
+  getInfo(allCardIdsStorageKey, (x, y) => printMessage(`Current value for all cards ${x} = ${y}`));
 
-    printMessage(value);
+  saveInfo(allCardIdsStorageKey, cardIdsInfo, (x, y) => printMessage(`Info stored for all cards ${x} = ${y}`));
 
-    getCardInfo(value, x => printMessage(`Current value for card ${value} = ${x}`));
+  var now = new Date().getTime().toString();
 
-    saveCardInfo(value, `${value} + ${now}`);
+  $(cardIds).each((index, cardId) => {
+
+    printMessage(cardId);
+
+    getCardInfo(cardId, (x, y) => printMessage(`Current value for card ${x} = ${y}`));
+
+    saveCardInfo(cardId, now);
 
   });
-
 }
