@@ -82,24 +82,25 @@ loadNotes = () => {
                 appendNoteToCard(cardInfo[1], currentCardNote);
             });
 
-            saveCardInfo(cardInfo[1], now, () => printMessage(`Info stored for card ${cardInfo[1]} = ${now}`));
-
         });
     }
 }
 
 messageReceived = (message, sender, sendResponse) => {
-    printMessage(message.txt);
+    printMessage(message.command);
 
-    switch (message.txt) {
+    switch (message.command) {
         case "loadNotes":
             loadNotes();
             break;
         case "clearAllNotes":
             clearAllNotes();
             break;
+        case "saveCardNote":
+            saveCardInfo(message.value[0], message.value[1]);
+            break;
         default:
-            printMessage(`Error: Unknown message: ${message.txt}`);
+            printMessage(`Error: Unknown message: ${message.command}`);
     }
 }
 

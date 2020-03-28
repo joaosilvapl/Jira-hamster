@@ -1,12 +1,6 @@
 .cardNote {
     background-color: yellow;
     margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     border: 1px solid #000000;
-}
-
-.cardNote:hover {
-    overflow: visible;
+    word-wrap: break-word;
 }
