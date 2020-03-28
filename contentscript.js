@@ -32,13 +32,22 @@ getCardInfo = (cardId, callback) => {
 }
 
 appendNoteToCard = (cardId, note) => {
-    console.log(typeof(cardElement) + " " + note);
 
-    var cardDiv = $(`.ghx-issue[data-issue-key='${cardId}']`);
+    if (note) {
+        var cardDiv = $(`.ghx-issue[data-issue-key='${cardId}']`);
 
-    //TODO: check for empty collection
+        if (cardDiv.length == 0) {
+            printMessage(`Error: Could not find card for id=${cardId}`);
+        } else {
+            $(cardDiv).append(`<div class='cardNote'>${note}</div>`);
+        }
+    }
+}
 
-    $(cardDiv).append(`<div class='cardNote'>${note}</div>`);
+clearAllNotes = () => {
+    if (confirm("This will delete all saved notes. Continue?")) {
+        chrome.storage.sync.clear()
+    }
 }
 
 loadNotes = () => {
@@ -82,8 +91,15 @@ loadNotes = () => {
 messageReceived = (message, sender, sendResponse) => {
     printMessage(message.txt);
 
-    if (message.txt === "loadNotes") {
-        loadNotes();
+    switch (message.txt) {
+        case "loadNotes":
+            loadNotes();
+            break;
+        case "clearAllNotes":
+            clearAllNotes();
+            break;
+        default:
+            printMessage(`Error: Unknown message: ${message.txt}`);
     }
 }
 
