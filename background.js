@@ -1,17 +1,12 @@
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.set({color: '#3aa757'}, function() {
-      console.log("The color is green.");
-    });
-  });
+console.log("hello " + new Date());
 
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+
+
+chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {hostEquals: 'jirasol.atlassian.net'},
-      })
-      ],
-          actions: [new chrome.declarativeContent.ShowPageAction()]
+        conditions: [new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: { hostSuffix: 'atlassian.net' },
+        })],
+        actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
-  });
-
-  
+});
