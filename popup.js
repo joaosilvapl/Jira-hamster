@@ -1,20 +1,14 @@
 console.log("popup.js loaded");
 
-let changeColor = document.getElementById('changeColor');
+let btnLoadNotes = document.getElementById('loadNotes');
 
-chrome.storage.sync.get('color', function(data) {
-    changeColor.style.backgroundColor = data.color;
-    changeColor.setAttribute('value', data.color);
-});
-
-changeColor.onclick = function(element) {
-    let color = element.target.value;
+btnLoadNotes.onclick = function(element) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
-        console.log("changeColor clicked");
+        console.log("btnLoadNotes clicked");
 
         var activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, { "txt": "start" });
+        chrome.tabs.sendMessage(activeTab.id, { "txt": "loadNotes" });
 
     });
 };

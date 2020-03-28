@@ -31,40 +31,60 @@ getCardInfo = (cardId, callback) => {
     getInfo(key, (x, y) => callback(x, y));
 }
 
-printMessage(`jQuery type: ${typeof (jQuery)}`);
+appendNoteToCard = (cardId, note) => {
+    console.log(typeof(cardElement) + " " + note);
 
-if (!jQuery || !$) {
-    printMessage("jQuery not loaded");
-} else {
+    var cardDiv = $(`.ghx-issue[data-issue-key='${cardId}']`);
 
-    var cardIdElements = $(".ghx-key[aria-label]");
+    //TODO: check for empty collection
 
-    printMessage(`Found cards: ${cardIdElements.length}`);
+    $(cardDiv).append(`<div class='cardNote'>${note}</div>`);
+}
 
-    var cardsInfo = [];
+loadNotes = () => {
+    if (!jQuery || !$) {
+        printMessage("jQuery not loaded");
+    } else {
 
-    $(cardIdElements).each((index, element) => { cardsInfo.push([element, $(element).attr('aria-label')]) });
+        var cardIdElements = $(".ghx-key[aria-label]");
 
-    var cardIdsInfo = $(cardsInfo).map((index, x) => x[1]).get();
+        printMessage(`Found cards: ${cardIdElements.length}`);
 
-    getInfo(allCardIdsStorageKey, (x, y) => printMessage(`Current number of cards ${x} = ${y.length}`));
+        var cardsInfo = [];
 
-    saveInfo(allCardIdsStorageKey, cardIdsInfo, () => printMessage(`Info stored for all cards ${allCardIdsStorageKey} = ${cardIdsInfo.length}`));
+        $(cardIdElements).each((index, element) => { cardsInfo.push([element, $(element).attr('aria-label')]) });
 
-    var now = new Date().getTime().toString();
+        var cardIdsInfo = $(cardsInfo).map((index, x) => x[1]).get();
 
-    $(cardsInfo).each((index, cardInfo) => {
+        getInfo(allCardIdsStorageKey, (x, y) => printMessage(`Current number of cards ${x} = ${y.length}`));
 
-        printMessage(cardInfo[1]);
+        saveInfo(allCardIdsStorageKey, cardIdsInfo, () => printMessage(`Info stored for all cards ${allCardIdsStorageKey} = ${cardIdsInfo.length}`));
 
-        getCardInfo(cardInfo[1], (x, y) => printMessage(`Current value for card ${x} = ${y}`));
+        var now = new Date().getTime().toString();
 
-        saveCardInfo(cardInfo[1], now, () => printMessage(`Info stored for card ${cardInfo[1]} = ${now}`));
-    });
+        $(cardsInfo).each((index, cardInfo) => {
+
+            printMessage(cardInfo[1]);
+
+            getCardInfo(cardInfo[1], (x, y) => {
+                currentCardNote = y;
+                printMessage(`Current value for card ${x} = ${currentCardNote}`);
+
+                appendNoteToCard(cardInfo[1], currentCardNote);
+            });
+
+            saveCardInfo(cardInfo[1], now, () => printMessage(`Info stored for card ${cardInfo[1]} = ${now}`));
+
+        });
+    }
 }
 
 messageReceived = (message, sender, sendResponse) => {
     printMessage(message.txt);
+
+    if (message.txt === "loadNotes") {
+        loadNotes();
+    }
 }
 
 chrome.runtime.onMessage.addListener(messageReceived);
