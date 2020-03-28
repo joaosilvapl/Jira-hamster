@@ -45,11 +45,11 @@ if (!jQuery || !$) {
 
     $(cardIdElements).each((index, element) => { cardsInfo.push([element, $(element).attr('aria-label')]) });
 
-    var cardIdsInfo = $(cardsInfo).map((index, x) => x[1]);
+    var cardIdsInfo = $(cardsInfo).map((index, x) => x[1]).get();
 
     getInfo(allCardIdsStorageKey, (x, y) => printMessage(`Current number of cards ${x} = ${y.length}`));
 
-    saveInfo(allCardIdsStorageKey, cardIdsInfo, (x, y) => printMessage(`Info stored for all cards ${x} = ${y.length}`));
+    saveInfo(allCardIdsStorageKey, cardIdsInfo, () => printMessage(`Info stored for all cards ${allCardIdsStorageKey} = ${cardIdsInfo.length}`));
 
     var now = new Date().getTime().toString();
 
@@ -62,3 +62,9 @@ if (!jQuery || !$) {
         saveCardInfo(cardInfo[1], now, () => printMessage(`Info stored for card ${cardInfo[1]} = ${now}`));
     });
 }
+
+messageReceived = (message, sender, sendResponse) => {
+    printMessage(message.txt);
+}
+
+chrome.runtime.onMessage.addListener(messageReceived);
