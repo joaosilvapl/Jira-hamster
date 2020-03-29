@@ -22,6 +22,9 @@ var updateCardNote = () => {
 
     sendEvent(cardId, newNote);
 
+    var cardDiv = $(`#cardDiv-${cardId}`);
+    cardDiv[0].innerHTML = newNote;
+
     $('#myModal').hide();
 }
 
