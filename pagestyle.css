@@ -6,6 +6,10 @@
     word-wrap: break-word;
 }
 
+.cardNoteEmpty {
+    background-color: inherit;
+}
+
 .cardTextInput {
     background-color: yellow;
     margin-top: 2px;

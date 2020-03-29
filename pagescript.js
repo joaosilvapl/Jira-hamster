@@ -25,6 +25,12 @@ var updateCardNote = () => {
     var cardDiv = $(`#cardDiv-${cardId}`);
     cardDiv[0].innerHTML = newNote;
 
+    if (newNote && newNote != '') {
+        $(cardDiv).removeClass('cardNoteEmpty');
+    } else {
+        $(cardDiv).addClass('cardNoteEmpty');
+    }
+
     $('#myModal').hide();
 }
 

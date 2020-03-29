@@ -31,18 +31,32 @@ getCardInfo = (cardId, callback) => {
     getInfo(key, (x, y) => callback(x, y));
 }
 
+getCardElement = (cardId, note) => {
+    var noteText;
+    var noteClass;
+    if (note && note != '') {
+        noteText = note;
+        noteClass = "";
+    } else {
+        noteText = " ";
+        noteClass = 'cardNoteEmpty';
+    }
+
+    return `<div id="cardDiv-${cardId}"
+             class='cardNote ${noteClass}' onclick='event.stopPropagation();showModal("${cardId}");return false;'>${noteText}</div>`;
+}
+
 appendNoteToCard = (cardId, note) => {
 
-    if (note) {
-        var cardDiv = $(`.ghx-issue[data-issue-key='${cardId}']`);
+    var cardDiv = $(`.ghx-issue[data-issue-key='${cardId}']`);
 
-        if (cardDiv.length == 0) {
-            printMessage(`Error: Could not find card for id=${cardId}`);
-        } else {
-            $(cardDiv).append(`<div id="cardDiv-${cardId}"
-             class='cardNote' onclick='event.stopPropagation();showModal("${cardId}");return false;'>${note}</div>`);
-        }
+    if (cardDiv.length == 0) {
+        printMessage(`Error: Could not find card for id=${cardId}`);
+    } else {
+        var cardElement = getCardElement(cardId, note);
+        $(cardDiv).append(cardElement);
     }
+
 }
 
 clearAllNotes = () => {
