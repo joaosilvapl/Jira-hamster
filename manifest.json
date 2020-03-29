@@ -30,8 +30,11 @@
         "js": [
             "jquery-3.4.1.min.js",
             "contentscript.js"
-        ],
-        "css": ["contentscript.css"]
+        ]
     }],
+    "web_accessible_resources": [
+        "pagescript.js",
+        "pagestyle.css"
+    ],
     "manifest_version": 2
 }

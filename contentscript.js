@@ -39,7 +39,8 @@ appendNoteToCard = (cardId, note) => {
         if (cardDiv.length == 0) {
             printMessage(`Error: Could not find card for id=${cardId}`);
         } else {
-            $(cardDiv).append(`<div id="cardDiv-${cardId}" class='cardNote' onclick='event.stopPropagation();sendEvent("${cardId}");return false;'>${note}</div>`);
+            $(cardDiv).append(`<div id="cardDiv-${cardId}"
+             class='cardNote' onclick='event.stopPropagation();showModal("${cardId}");return false;'>${note}</div>`);
         }
     }
 }
@@ -84,19 +85,20 @@ loadNotes = () => {
 
         });
 
-        var s = document.createElement("script");
-        s.type = "text/javascript";
-        s.innerHTML = `var sendEvent = function(cardId) {document.dispatchEvent(new CustomEvent('hello', {'detail': cardId}));}`;
-        $("head").append(s);
+        $('head').append($('<link rel="stylesheet" type="text/css" />')
+            .attr('href', chrome.extension.getURL("pagestyle.css")));
 
-        document.addEventListener("hello", function(data) {
-            console.log("Jirasol: hello message received: " + data.detail);
-            chrome.runtime.sendMessage({ 'cardId': data.detail });
+        $.getScript(chrome.extension.getURL("pagescript.js"));
+
+        document.addEventListener("saveCardNote", function(data) {
+            console.log("Jirasol: saveCardNote message received: " + data.detail);
+            //Send message to the background script
+            chrome.runtime.sendMessage({ 'cardId': data.detail.cardId, 'cardNote': data.detail.cardNote });
         });
     }
 }
 
-messageReceived = (message, sender, sendResponse) => {
+messageReceived = (message) => {
     printMessage(message.command);
 
     switch (message.command) {
@@ -110,7 +112,9 @@ messageReceived = (message, sender, sendResponse) => {
             saveCardInfo(message.value[0], message.value[1]);
             break;
         default:
-            printMessage(`Error: Unknown message: ${message.command}`);
+            printMessage(`
+            Error: Unknown message: $ { message.command }
+            `);
     }
 }
 

@@ -15,10 +15,10 @@ printMessage = (message) => {
     console.log(`Jirasol: ${message}`);
 }
 
-messageReceived = (message, sender, sendResponse) => {
-    printMessage(message.cardId);
+messageReceived = (message) => {
+    printMessage(message.cardId + " - " + message.cardNote);
 
-    saveCardInfo(message.cardId, message.cardId + new Date().getTime(), () => {
+    saveCardInfo(message.cardId, message.cardNote, () => {
         printMessage("Card info saved");
     });
 }
