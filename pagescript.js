@@ -57,10 +57,3 @@ span.onclick = function() {
     // modal.style.display = "none";
     $(modal).hide();
 }
-
-// Hides the modal when the user clicks outside it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        $(modal).hide();
-    }
-}
