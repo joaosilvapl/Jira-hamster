@@ -34,7 +34,8 @@
     }],
     "web_accessible_resources": [
         "pagescript.js",
-        "pagestyle.css"
+        "pagestyle.css",
+        "images/addnote.png"
     ],
     "manifest_version": 2
 }
