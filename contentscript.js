@@ -39,7 +39,7 @@ appendNoteToCard = (cardId, note) => {
         if (cardDiv.length == 0) {
             printMessage(`Error: Could not find card for id=${cardId}`);
         } else {
-            $(cardDiv).append(`<div class='cardNote'>${note}</div>`);
+            $(cardDiv).append(`<div id="cardDiv-${cardId}" class='cardNote' onclick='event.stopPropagation();sendEvent("${cardId}");return false;'>${note}</div>`);
         }
     }
 }
@@ -82,6 +82,16 @@ loadNotes = () => {
                 appendNoteToCard(cardInfo[1], currentCardNote);
             });
 
+        });
+
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.innerHTML = `var sendEvent = function(cardId) {document.dispatchEvent(new CustomEvent('hello', {'detail': cardId}));}`;
+        $("head").append(s);
+
+        document.addEventListener("hello", function(data) {
+            console.log("Jirasol: hello message received: " + data.detail);
+            chrome.runtime.sendMessage({ 'cardId': data.detail });
         });
     }
 }

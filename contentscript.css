@@ -1,6 +1,7 @@
 .cardNote {
     background-color: yellow;
     margin-top: 2px;
+    padding: 2px;
     border: 1px solid #000000;
     word-wrap: break-word;
 }
