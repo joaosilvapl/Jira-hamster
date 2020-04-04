@@ -1,4 +1,3 @@
-const allCardIdsStorageKey = "allCardIds";
 const cardInfoStoragePrefix = "cardInfo";
 
 printMessage = (message) => {
@@ -46,13 +45,16 @@ getCardElement = (cardId, note) => {
              class='cardNote ${noteClass}' onclick='event.stopPropagation();showModal("${cardId}");return false;'>${noteText}</div>`;
 }
 
-appendNoteToCard = (cardId, note) => {
+appendNoteToCard = (cardId, note, isBacklogMode) => {
 
-    var cardDiv = $(`.ghx-issue[data-issue-key='${cardId}']`);
+    let cardSelectorClass = isBacklogMode ? "ghx-backlog-card" : "ghx-issue";
+
+    var cardDiv = $(`.${cardSelectorClass}[data-issue-key='${cardId}']`);
 
     if (cardDiv.length == 0) {
         printMessage(`Error: Could not find card for id=${cardId}`);
     } else {
+        printMessage(`Adding note div for id=${cardId}`);
         var cardElement = getCardElement(cardId, note);
         $(cardDiv).append(cardElement);
     }
@@ -65,36 +67,32 @@ clearAllNotes = () => {
     }
 }
 
-loadNotes = () => {
+loadNotes = (isBacklogMode) => {
     if (!jQuery || !$) {
         printMessage("jQuery not loaded");
     } else {
 
-        var cardIdElements = $(".ghx-key[aria-label]");
+
+        let cardSelectorAttribute = isBacklogMode ? "title" : "aria-label";
+
+        var cardSelector = `.ghx-key[${cardSelectorAttribute}]`;
+
+        var cardIdElements = $(cardSelector);
 
         printMessage(`Found cards: ${cardIdElements.length}`);
 
         var cardsInfo = [];
 
-        $(cardIdElements).each((index, element) => { cardsInfo.push([element, $(element).attr('aria-label')]) });
-
-        var cardIdsInfo = $(cardsInfo).map((index, x) => x[1]).get();
-
-        getInfo(allCardIdsStorageKey, (x, y) => printMessage(`Current number of cards ${x} = ${y.length}`));
-
-        saveInfo(allCardIdsStorageKey, cardIdsInfo, () => printMessage(`Info stored for all cards ${allCardIdsStorageKey} = ${cardIdsInfo.length}`));
-
-        var now = new Date().getTime().toString();
+        $(cardIdElements).each((index, element) => { cardsInfo.push($(element).attr(`${cardSelectorAttribute}`)) });
 
         $(cardsInfo).each((index, cardInfo) => {
 
-            printMessage(cardInfo[1]);
+            printMessage(cardInfo);
 
-            getCardInfo(cardInfo[1], (x, y) => {
-                currentCardNote = y;
-                printMessage(`Current value for card ${x} = ${currentCardNote}`);
+            getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
+                printMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
 
-                appendNoteToCard(cardInfo[1], currentCardNote);
+                appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
             });
 
         });
@@ -117,18 +115,16 @@ messageReceived = (message) => {
 
     switch (message.command) {
         case "loadNotes":
-            loadNotes();
+            loadNotes(false);
+            break;
+        case "loadNotesBacklog":
+            loadNotes(true);
             break;
         case "clearAllNotes":
             clearAllNotes();
             break;
-        case "saveCardNote":
-            saveCardInfo(message.value[0], message.value[1]);
-            break;
         default:
-            printMessage(`
-            Error: Unknown message: $ { message.command }
-            `);
+            printMessage(`Error: Unknown message: $ { message.command }`);
     }
 }
 
