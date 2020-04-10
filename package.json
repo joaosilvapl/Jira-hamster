@@ -1,0 +1,19 @@
+{
+  "name": "jirasol",
+  "version": "1.0.0",
+  "description": "An extension to Google Chrome's browser for boosting productivity while working with Jira.",
+  "main": "contentscript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaosilvapl/Jirasol.git"
+  },
+  "author": "Joao Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaosilvapl/Jirasol/issues"
+  },
+  "homepage": "https://github.com/joaosilvapl/Jirasol#readme"
+}
