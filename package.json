@@ -1,0 +1,25 @@
+{
+  "name": "Jirasol",
+  "version": "1.0.0",
+  "description": "An extension to Google Chrome's browser for boosting productivity while working with Jira.",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaosilvapl/Jirasol.git"
+  },
+  "keywords": [],
+  "author": "Joao Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaosilvapl/Jirasol/issues"
+  },
+  "homepage": "https://github.com/joaosilvapl/Jirasol#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.1.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}
