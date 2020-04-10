@@ -13,7 +13,7 @@
 
 .cardNoteEmpty:hover {
     height: 35px;
-    background-image: url("images/addnote.png");
+    background-image: url("../images/addnote.png");
     background-repeat: no-repeat;
 }
 

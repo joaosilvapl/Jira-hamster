@@ -98,9 +98,9 @@ loadNotes = (isBacklogMode) => {
         });
 
         $('head').append($('<link rel="stylesheet" type="text/css" />')
-            .attr('href', chrome.extension.getURL("pagestyle.css")));
+            .attr('href', chrome.extension.getURL("../css/pagestyle.css")));
 
-        $.getScript(chrome.extension.getURL("pagescript.js"));
+        $.getScript(chrome.extension.getURL("js/pagescript.js"));
 
         document.addEventListener("saveCardNote", function(data) {
             console.log("Jirasol: saveCardNote message received: " + data.detail);

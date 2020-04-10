@@ -9,7 +9,7 @@
     ],
     "background": {
         "scripts": [
-            "background.js"
+            "js/background.js"
         ],
         "persistent": false
     },
@@ -28,13 +28,13 @@
             "*://*.atlassian.net/*"
         ],
         "js": [
-            "jquery-3.4.1.min.js",
-            "contentscript.js"
+            "js/jquery-3.4.1.min.js",
+            "js/contentscript.js"
         ]
     }],
     "web_accessible_resources": [
-        "pagescript.js",
-        "pagestyle.css",
+        "js/pagescript.js",
+        "css/pagestyle.css",
         "images/addnote.png"
     ],
     "manifest_version": 2
