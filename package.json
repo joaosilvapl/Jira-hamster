@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/joaosilvapl/Jirasol/issues"
   },
-  "homepage": "https://github.com/joaosilvapl/Jirasol#readme"
+  "homepage": "https://github.com/joaosilvapl/Jirasol#readme",
+  "devDependencies": {
+    "cypress": "^4.3.0"
+  }
 }
