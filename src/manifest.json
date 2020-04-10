@@ -19,10 +19,6 @@
             "16": "images/ironman.png"
         }
     },
-    "options_page": "options.html",
-    "icons": {
-        "16": "images/ironman.png"
-    },
     "content_scripts": [{
         "matches": [
             "*://*.atlassian.net/*"
