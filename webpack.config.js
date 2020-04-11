@@ -20,5 +20,17 @@ module.exports = {
             { from: 'static/popup.html', to: 'popup.html' },
             { from: 'manifest.json', to: 'manifest.json' }
         ])
-    ]
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /(node_modules)/,
+                loader: 'babel-loader',
+                options: {
+                    plugins: ['transform-class-properties']
+                }
+            },
+        ]
+    }
 };

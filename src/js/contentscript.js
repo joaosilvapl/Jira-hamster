@@ -1,133 +1,69 @@
+import Logger from './logger';
+import CardInfoRepository from './cardinforepository';
+import CardDomManipulator from './carddommanipulator';
 
+class ContentScript {
 
-const cardInfoStoragePrefix = "cardInfo";
+    constructor() {
 
-printMessage = (message) => {
-    console.log(`Jirasol: ${message}`);
-}
+        if (!jQuery || !$) {
+            throw "jQuery not loaded. Aborting.";
+        }
 
-getCardInfoStorageKey = (cardId) => cardInfoStoragePrefix + cardId;
-
-saveInfo = (key, info, callback) => {
-    chrome.storage.sync.set({
-        [key]: info
-    }, callback);
-}
-
-getInfo = (key, callback) => {
-    chrome.storage.sync.get(key, (obj) => {
-        var value = obj[key];
-        callback(key, value);
-    });
-};
-
-saveCardInfo = (cardId, info, callback) => {
-    var key = cardInfoStoragePrefix + cardId;
-    saveInfo(key, info, callback);
-}
-
-getCardInfo = (cardId, callback) => {
-    var key = cardInfoStoragePrefix + cardId;
-
-    getInfo(key, (x, y) => callback(x, y));
-}
-
-getCardElement = (cardId, note) => {
-    var noteText;
-    var noteClass;
-    if (note && note != '') {
-        noteText = note;
-        noteClass = "";
-    } else {
-        noteText = " ";
-        noteClass = 'cardNoteEmpty';
+        this.logger = new Logger();
+        this.cardInfoRepository = new CardInfoRepository();
+        this.cardDomManipulator = new CardDomManipulator(this.logger);
     }
 
-    return `<div id="cardDiv-${cardId}"
-             class='cardNote ${noteClass}' onclick='event.stopPropagation();showModal("${cardId}");return false;'>${noteText}</div>`;
-}
+    loadNotes = (isBacklogMode) => {
 
-appendNoteToCard = (cardId, note, isBacklogMode) => {
-
-    let cardSelectorClass = isBacklogMode ? "ghx-backlog-card" : "ghx-issue";
-
-    var cardDiv = $(`.${cardSelectorClass}[data-issue-key='${cardId}']`);
-
-    if (cardDiv.length == 0) {
-        printMessage(`Error: Could not find card for id=${cardId}`);
-    } else {
-        printMessage(`Adding note div for id=${cardId}`);
-        var cardElement = getCardElement(cardId, note);
-        $(cardDiv).append(cardElement);
-    }
-
-}
-
-clearAllNotes = () => {
-    if (confirm("This will delete all saved notes. Continue?")) {
-        chrome.storage.sync.clear()
-    }
-}
-
-loadNotes = (isBacklogMode) => {
-    if (!jQuery || !$) {
-        printMessage("jQuery not loaded");
-    } else {
-
-
-        let cardSelectorAttribute = isBacklogMode ? "title" : "aria-label";
-
-        var cardSelector = `.ghx-key[${cardSelectorAttribute}]`;
-
-        var cardIdElements = $(cardSelector);
-
-        printMessage(`Found cards: ${cardIdElements.length}`);
-
-        var cardsInfo = [];
-
-        $(cardIdElements).each((index, element) => { cardsInfo.push($(element).attr(`${cardSelectorAttribute}`)) });
+        let cardsInfo = this.cardDomManipulator.getAllCardIds(isBacklogMode);
 
         $(cardsInfo).each((index, cardInfo) => {
 
-            printMessage(cardInfo);
+            this.logger.logMessage(cardInfo);
 
-            getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
-                printMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
+            this.cardInfoRepository.getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
+                this.logger.logMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
 
-                appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
+                this.cardDomManipulator.appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
             });
 
         });
 
+        this.addPageDomElements();
+    }
+
+    addPageDomElements = () => {
         $('head').append($('<link rel="stylesheet" type="text/css" />')
             .attr('href', chrome.extension.getURL("../css/pagestyle.css")));
 
         $.getScript(chrome.extension.getURL("js/pagescript.js"));
 
-        document.addEventListener("saveCardNote", function(data) {
-            console.log("Jirasol: saveCardNote message received: " + data.detail);
+        document.addEventListener("saveCardNote", function (data) {
             //Send message to the background script
             chrome.runtime.sendMessage({ 'cardId': data.detail.cardId, 'cardNote': data.detail.cardNote });
         });
     }
-}
 
-messageReceived = (message) => {
-    printMessage(message.command);
+    messageReceived = (message) => {
+        this.logger.logMessage(message.command);
 
-    switch (message.command) {
-        case "loadNotes":
-            loadNotes(false);
-            break;
-        case "loadNotesBacklog":
-            loadNotes(true);
-            break;
-        case "clearAllNotes":
-            clearAllNotes();
-            break;
-        default:
-            printMessage(`Error: Unknown message: $ { message.command }`);
+        switch (message.command) {
+            case "loadNotes":
+                this.loadNotes(false);
+                break;
+            case "loadNotesBacklog":
+                this.loadNotes(true);
+                break;
+            case "clearAllNotes":
+                this.cardInfoRepository.clearAllNotes();
+                break;
+            default:
+                this.logger.logMessage(`Error: Unknown message: $ { message.command }`);
+                break;
+        }
     }
 }
 
-chrome.runtime.onMessage.addListener(messageReceived);
+chrome.runtime.onMessage.addListener(new ContentScript().messageReceived);
