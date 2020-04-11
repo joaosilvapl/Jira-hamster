@@ -24,7 +24,6 @@ export default class CardInfoRepository {
     
     getCardInfo = (cardId, callback) => {
         var key = cardInfoStoragePrefix + cardId;
-    
         this.getInfo(key, (x, y) => callback(x, y));
     }
 

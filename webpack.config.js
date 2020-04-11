@@ -2,15 +2,17 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/js/contentscript.js',
+    entry: {
+        contentscript: './src/js/contentscript.js',
+        background: './src/js/background.js',
+    },
     mode: 'production',
-    optimization: {
-        // We no not want to minimize our code.
+    optimization: { //TODO: make this with conditional
         minimize: false
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'js/contentscript_bundle.js'
+        filename: 'js/[name]_bundle.js'
     },
     plugins: [
         new CopyPlugin([
