@@ -1,3 +1,5 @@
+import * as constants from './constants';
+
 export default class CardDomManipulator {
 
     constructor(logger) {
@@ -28,7 +30,7 @@ export default class CardDomManipulator {
             noteClass = "";
         } else {
             noteText = " ";
-            noteClass = 'cardNoteEmpty';
+            noteClass = constants.CardNoteClass_Empty;
         }
 
         return `<div id="cardDiv-${cardId}"

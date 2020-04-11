@@ -1,10 +1,15 @@
-var sendEvent = (cardId, cardNote) => {
-    document.dispatchEvent(new CustomEvent('saveCardNote', { 'detail': { 'cardId': cardId, 'cardNote': cardNote } }));
+import * as constants from './constants';
+import Logger from './logger';
+
+let logger = new Logger();
+logger.logMessage('Pagescript.js - start');
+
+window.sendEvent = (cardId, cardNote) => {
+    document.dispatchEvent(new CustomEvent(constants.Event_SaveCardNote, { 'detail': { 'cardId': cardId, 'cardNote': cardNote } }));
 }
 
-var showModal = (cardId) => {
+window.showModal = (cardId) => {
     var cardDiv = $('#cardDiv-' + cardId);
-    var cardTextInput = $('#cardTextInput-' + cardId);
 
     var modal = document.getElementById("myModal");
     var modalTextInput = document.getElementById("modalTextInput");
@@ -15,7 +20,7 @@ var showModal = (cardId) => {
     $(modal).show();
 }
 
-var updateCardNote = () => {
+window.updateCardNote = () => {
     var textInput = $('#modalTextInput')[0];
     var cardId = textInput.cardId;
     var newNote = textInput.value;
@@ -26,9 +31,9 @@ var updateCardNote = () => {
     cardDiv[0].innerHTML = newNote;
 
     if (newNote && newNote != '') {
-        $(cardDiv).removeClass('cardNoteEmpty');
+        $(cardDiv).removeClass(constants.CardNoteClass_Empty);
     } else {
-        $(cardDiv).addClass('cardNoteEmpty');
+        $(cardDiv).addClass(constants.CardNoteClass_Empty);
     }
 
     $('#myModal').hide();
@@ -53,7 +58,9 @@ var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+span.onclick = function () {
     // modal.style.display = "none";
     $(modal).hide();
 }
+
+logger.logMessage('Pagescript.js - end');

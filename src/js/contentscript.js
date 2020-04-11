@@ -39,9 +39,9 @@ class ContentScript {
         $('head').append($('<link rel="stylesheet" type="text/css" />')
             .attr('href', chrome.extension.getURL("../css/pagestyle.css")));
 
-        $.getScript(chrome.extension.getURL("js/pagescript.js"));
+        $.getScript(chrome.extension.getURL("js/pagescript_bundle.js"));
 
-        document.addEventListener("saveCardNote", function (data) {
+        document.addEventListener(constants.Event_SaveCardNote, function (data) {
             //Send message to the background script
             chrome.runtime.sendMessage({ 'cardId': data.detail.cardId, 'cardNote': data.detail.cardNote });
         });

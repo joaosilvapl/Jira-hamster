@@ -29,7 +29,7 @@
         ]
     }],
     "web_accessible_resources": [
-        "js/pagescript.js",
+        "js/pagescript_bundle.js",
         "css/pagestyle.css",
         "images/addnote.png"
     ],

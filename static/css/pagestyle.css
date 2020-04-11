@@ -6,7 +6,7 @@
     word-wrap: break-word;
 }
 
-.cardNoteEmpty {
+.cardNoteEmpty {    /*TODO: get from constants*/
     background-color: inherit;
     border: none;
 }
