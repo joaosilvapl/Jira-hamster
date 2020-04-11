@@ -1,3 +1,4 @@
+import * as constants from './constants';
 import Logger from './logger';
 import CardInfoRepository from './cardinforepository';
 import CardDomManipulator from './carddommanipulator';
@@ -50,13 +51,13 @@ class ContentScript {
         this.logger.logMessage(message.command);
 
         switch (message.command) {
-            case "loadNotes":
+            case constants.Command_LoadNotes:
                 this.loadNotes(false);
                 break;
-            case "loadNotesBacklog":
+            case constants.Command_LoadNotesBacklog:
                 this.loadNotes(true);
                 break;
-            case "clearAllNotes":
+            case constants.Command_ClearNotes:
                 this.cardInfoRepository.clearAllNotes();
                 break;
             default:

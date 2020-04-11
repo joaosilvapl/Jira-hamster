@@ -5,6 +5,7 @@ module.exports = {
     entry: {
         contentscript: './src/js/contentscript.js',
         background: './src/js/background.js',
+        popup: './src/js/popup.js',
     },
     mode: 'production',
     optimization: { //TODO: make this with conditional
