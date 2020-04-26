@@ -37,14 +37,29 @@ class ContentScript {
 
     addPageDomElements = () => {
         $('head').append($('<link rel="stylesheet" type="text/css" />')
-            .attr('href', chrome.extension.getURL("../css/pagestyle.css")));
+        .attr('href', chrome.extension.getURL("../css/pagestyle.css")));
+    
+    $.getScript(chrome.extension.getURL("js/pagescript_bundle.js"));
+    
+    document.addEventListener(constants.Event_SaveCardNote, function (data) {
+        //Send message to the background script
+        chrome.runtime.sendMessage({ 'cardId': data.detail.cardId, 'cardNote': data.detail.cardNote });
+    });
+    }
 
-        $.getScript(chrome.extension.getURL("js/pagescript_bundle.js"));
+    toggleVisibility = (elementId) => {
+        if ($(`#${elementId}:visible`).length) {
+            $(`#${elementId}`).hide();
+        }
+        else {
+            $(`#${elementId}`).show();
+        }
+    }
 
-        document.addEventListener(constants.Event_SaveCardNote, function (data) {
-            //Send message to the background script
-            chrome.runtime.sendMessage({ 'cardId': data.detail.cardId, 'cardNote': data.detail.cardNote });
-        });
+    toggleFocusMode = () => {
+        this.toggleVisibility('ghx-header');
+        this.toggleVisibility('navigation-app');
+        this.toggleVisibility('ghx-operations');
     }
 
     messageReceived = (message) => {
@@ -56,6 +71,9 @@ class ContentScript {
                 break;
             case constants.Command_LoadNotesBacklog:
                 this.loadNotes(true);
+                break;
+            case constants.Command_ToggleFocusMode:
+                this.toggleFocusMode();
                 break;
             case constants.Command_ClearNotes:
                 this.cardInfoRepository.clearAllNotes();
