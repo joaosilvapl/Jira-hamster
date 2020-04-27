@@ -22,3 +22,12 @@ const messageReceived = (message) => {
 }
 
 chrome.runtime.onMessage.addListener(messageReceived);
+
+chrome.commands.onCommand.addListener((command) => {
+    logger.logMessage(`Command received: ${command}`);
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { 'command': command });
+    });
+
+});

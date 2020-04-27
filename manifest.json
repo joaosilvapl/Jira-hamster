@@ -33,5 +33,20 @@
         "css/pagestyle.css",
         "images/addnote.png"
     ],
+    "commands": {
+        "_execute_page_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Y",
+                "mac": "Command+Shift+Y"
+            }
+        },
+        "toggle-focus-mode": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+F",
+                "mac": "Command+Shift+F"
+            },
+            "description": "Toggle focus mode"
+        }
+    },
     "manifest_version": 2
 }
