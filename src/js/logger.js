@@ -1,6 +1,6 @@
 export default class Logger {
-    
+
     logMessage(message) {
-        console.log(`Jirasol: ${message}`);
+        console.log(`Jira hamster: ${message}`);
     }
 }
