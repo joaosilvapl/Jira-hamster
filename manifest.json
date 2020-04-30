@@ -37,18 +37,33 @@
         "images/addnote.png"
     ],
     "commands": {
-        "_execute_page_action": {
-            "suggested_key": {
-                "default": "Ctrl+Shift+Y",
-                "mac": "Command+Shift+Y"
-            }
-        },
         "toggle-focus-mode": {
             "suggested_key": {
                 "default": "Ctrl+Shift+F",
                 "mac": "Command+Shift+F"
             },
             "description": "Toggle focus mode"
+        },
+        "toggle-highlight-1": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+1",
+                "mac": "Command+Shift+1"
+            },
+            "description": "Toggle highlight 1"
+        },
+        "toggle-highlight-2": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+2",
+                "mac": "Command+Shift+2"
+            },
+            "description": "Toggle highlight 2"
+        },
+        "toggle-highlight-3": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+3",
+                "mac": "Command+Shift+3"
+            },
+            "description": "Toggle highlight 3"
         }
     },
     "manifest_version": 2

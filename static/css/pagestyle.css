@@ -6,7 +6,7 @@
     word-wrap: break-word;
 }
 
-.cardNoteEmpty {    /*TODO: get from constants*/
+.cardNoteEmpty {
     background-color: inherit;
     border: none;
 }
@@ -77,4 +77,16 @@
 
 .modalTextInput {
     width: 100%;
+}
+
+.cardHighlight1 {
+    background-color: yellow;
+}
+
+.cardHighlight2 {
+    background-color: fuchsia;
+}
+
+.cardHighlight3 {
+    background-color: cyan;
 }
