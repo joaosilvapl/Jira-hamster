@@ -11,7 +11,7 @@ let btnFocusMode = document.getElementById('focusMode');
 let btnClearAllNotes = document.getElementById('clearAllNotes');
 
 const sendMessage = (command, arg) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
         logger.logMessage(`Command to send: ${command}, arguments: ${arg}`);
 
@@ -20,18 +20,14 @@ const sendMessage = (command, arg) => {
     });
 }
 
-btnLoadNotes.onclick = function (element) {
+btnLoadNotes.onclick = function(element) {
     sendMessage(constants.Command_LoadNotes);
 };
 
-btnLoadNotesBacklog.onclick = function (element) {
-    sendMessage(constants.Command_LoadNotesBacklog);
-};
-
-btnFocusMode.onclick = function (element) {
+btnFocusMode.onclick = function(element) {
     sendMessage(constants.Command_ToggleFocusMode);
 };
 
-btnClearAllNotes.onclick = function (element) {
+btnClearAllNotes.onclick = function(element) {
     sendMessage(constants.Command_ClearNotes);
 };

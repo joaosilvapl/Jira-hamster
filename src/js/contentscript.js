@@ -16,7 +16,9 @@ class ContentScript {
         this.cardDomManipulator = new CardDomManipulator(this.logger);
     }
 
-    loadNotes = (isBacklogMode) => {
+    loadNotes = () => {
+
+        let isBacklogMode = $('.ghx-backlog').length > 0;
 
         let cardsInfo = this.cardDomManipulator.getAllCardIds(isBacklogMode);
 
@@ -31,8 +33,6 @@ class ContentScript {
             });
 
         });
-
-        this.addPageDomElements();
     }
 
     addPageDomElements = () => {
@@ -79,10 +79,7 @@ class ContentScript {
 
         switch (message.command) {
             case constants.Command_LoadNotes:
-                this.loadNotes(false);
-                break;
-            case constants.Command_LoadNotesBacklog:
-                this.loadNotes(true);
+                this.loadNotes();
                 break;
             case constants.Command_ToggleFocusMode:
                 this.toggleFocusMode();

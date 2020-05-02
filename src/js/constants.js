@@ -1,5 +1,4 @@
 export const Command_LoadNotes = "load-notes";
-export const Command_LoadNotesBacklog = "load-notes-backlog";
 export const Command_ToggleFocusMode = "toggle-focus-mode";
 export const Command_ClearNotes = "clear-notes";
 
