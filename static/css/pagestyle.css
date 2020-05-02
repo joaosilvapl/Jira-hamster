@@ -4,17 +4,18 @@
     padding: 2px;
     border: 1px solid #000000;
     word-wrap: break-word;
+    height: 80%;
 }
 
 .cardNoteEmpty {
     background-color: inherit;
-    border: none;
+    height: 5px;
+    width: 5px;
 }
 
 .cardNoteEmpty:hover {
-    height: 35px;
-    background-image: url("../images/addnote.png");
-    background-repeat: no-repeat;
+    background-color: yellow;
+    cursor: text;
 }
 
 .cardTextInput {
@@ -80,7 +81,7 @@
 }
 
 .cardHighlight1 {
-    background-color: yellow;
+    background-color: orange;
 }
 
 .cardHighlight2 {
