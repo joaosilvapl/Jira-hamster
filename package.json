@@ -25,5 +25,9 @@
     "copy-webpack-plugin": "^5.1.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "@material/button": "^6.0.0",
+    "@material/textfield": "^6.0.0"
   }
 }
