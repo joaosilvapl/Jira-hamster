@@ -14,7 +14,7 @@ window.showModal = (cardId) => {
     var modal = document.getElementById("myModal");
     var modalTextInput = document.getElementById("modalTextInput");
     modalTextInput.cardId = cardId;
-    modalTextInput.value = cardDiv[0].innerHTML;
+    modalTextInput.value = cardDiv[0].innerText;
     modal.focus();
     modalTextInput.focus();
     $(modal).show();
@@ -28,7 +28,7 @@ window.updateCardNote = () => {
     sendEvent(cardId, newNote);
 
     var cardDiv = $(`#cardDiv-${cardId}`);
-    cardDiv[0].innerHTML = newNote;
+    cardDiv[0].innerText = newNote;
 
     if (newNote && newNote != '') {
         $(cardDiv).removeClass(constants.CardNoteClass_Empty);
@@ -58,7 +58,7 @@ var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function () {
+span.onclick = function() {
     // modal.style.display = "none";
     $(modal).hide();
 }
