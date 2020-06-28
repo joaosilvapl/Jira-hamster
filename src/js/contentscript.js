@@ -90,9 +90,6 @@ class ContentScript {
             case constants.Command_ToggleHighlight2:
                 this.toggleHighlight(2);
                 break;
-            case constants.Command_ToggleHighlight3:
-                this.toggleHighlight(3);
-                break;
             case constants.Command_ClearNotes:
                 this.cardInfoRepository.clearAllNotes();
                 break;

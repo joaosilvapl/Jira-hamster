@@ -58,12 +58,12 @@
             },
             "description": "Toggle highlight 2"
         },
-        "toggle-highlight-3": {
+        "load-notes": {
             "suggested_key": {
-                "default": "Ctrl+Shift+3",
-                "mac": "Command+Shift+3"
+                "default": "Ctrl+Shift+L",
+                "mac": "Command+Shift+L"
             },
-            "description": "Toggle highlight 3"
+            "description": "Load notes"
         }
     },
     "manifest_version": 2
