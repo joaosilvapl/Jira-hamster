@@ -22,7 +22,11 @@ export default class CardDomManipulator {
         return cardsInfo;
     }
 
-    buildCardElement = (cardId, note, isBacklogMode) => {
+    buildCardDivId = (cardId) => {
+        return `cardDiv-${cardId}`;
+    }
+
+    buildCardElement = (cardId, cardDivId, note, isBacklogMode) => {
         let noteText;
         let noteClass;
         if (note && note != '') {
@@ -37,7 +41,7 @@ export default class CardDomManipulator {
             noteClass += " ghx-summary"
         }
 
-        return `<div id="cardDiv-${cardId}"
+        return `<div id="${cardDivId}"
                  class='cardNote ${noteClass}' 
                  onclick='event.stopPropagation();showModal("${cardId}");return false;'>
                  ${noteText}
@@ -45,6 +49,13 @@ export default class CardDomManipulator {
     }
 
     appendNoteToCard = (cardId, note, isBacklogMode) => {
+
+        let cardDivId = this.buildCardDivId(cardId);
+
+        if ($(`#${cardDivId}`).length > 0) {
+            //A note already exists for the given card. It should not be re-added
+            return;
+        }
 
         let cardSelectorClass = isBacklogMode ? "ghx-backlog-card" : "ghx-issue";
 
@@ -57,7 +68,7 @@ export default class CardDomManipulator {
             let cardDiv = $(cardDivs[0]);
 
             this.logger.logMessage(`Adding note div for id=${cardId}`);
-            var cardElement = this.buildCardElement(cardId, note, isBacklogMode);
+            var cardElement = this.buildCardElement(cardId, cardDivId, note, isBacklogMode);
 
             if (isBacklogMode) {
                 let cardRowElements = cardDiv.find('div.ghx-row.ghx-plan-main-fields');
