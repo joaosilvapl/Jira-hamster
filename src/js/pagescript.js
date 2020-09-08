@@ -49,7 +49,11 @@ $(document.body).append(`<div id="myModal" class="modal">
     <button onclick="updateCardNote()">Update</button>
   </div>
 
-</div>`);
+</div>
+
+<input type="hidden" id="jiraHamsterLoadNotesEnabled" value="0">
+
+`);
 
 // Get the modal
 var modal = document.getElementById("myModal");

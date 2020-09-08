@@ -16,7 +16,9 @@ class ContentScript {
         this.cardDomManipulator = new CardDomManipulator(this.logger);
     }
 
-    loadNotes = () => {
+    toggleNotes = () => {
+
+        let loadNotesEnabled = this.getLoadNotesEnabled();
 
         let isBacklogMode = $('.ghx-backlog').length > 0;
 
@@ -26,13 +28,27 @@ class ContentScript {
 
             this.logger.logMessage(cardInfo);
 
-            this.cardInfoRepository.getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
-                this.logger.logMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
+            if (!loadNotesEnabled) {
+                this.cardInfoRepository.getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
+                    this.logger.logMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
 
-                this.cardDomManipulator.appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
-            });
+                    this.cardDomManipulator.appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
+                });
+            }
 
         });
+
+        this.setLoadNotesEnabled(!loadNotesEnabled);
+    }
+
+    getLoadNotesEnabled = () => {
+        let isEnabledTextValue = $('#jiraHamsterLoadNotesEnabled')[0].value;
+
+        return isEnabledTextValue === "1";
+    }
+
+    setLoadNotesEnabled = (enabled) => {
+        $('#jiraHamsterLoadNotesEnabled')[0].value = enabled ? "1" : "0";
     }
 
     addPageDomElements = () => {
@@ -79,7 +95,7 @@ class ContentScript {
 
         switch (message.command) {
             case constants.Command_LoadNotes:
-                this.loadNotes();
+                this.toggleNotes();
                 break;
             case constants.Command_ToggleFocusMode:
                 this.toggleFocusMode();
