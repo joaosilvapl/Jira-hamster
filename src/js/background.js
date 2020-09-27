@@ -1,3 +1,4 @@
+import * as constants from './constants';
 import Logger from './logger';
 import CardInfoRepository from './cardinforepository';
 
@@ -31,3 +32,14 @@ chrome.commands.onCommand.addListener((command) => {
     });
 
 });
+
+const showAllNotes = () => {
+    logger.logMessage("Show notes");
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { 'command': constants.Command_ShowHideNotes });
+    });
+
+    setTimeout(showAllNotes, 500);
+}
+
+setTimeout(showAllNotes, 500);

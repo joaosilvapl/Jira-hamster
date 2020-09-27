@@ -17,8 +17,12 @@ class ContentScript {
     }
 
     toggleNotes = () => {
+        this.setLoadNotesEnabled(!this.getLoadNotesEnabled());
+        this.showHideNotes();
+    }
 
-        let loadNotesEnabled = this.getLoadNotesEnabled();
+    showHideNotes = () => {
+        let showNotes = this.getLoadNotesEnabled();
 
         let isBacklogMode = $('.ghx-backlog').length > 0;
 
@@ -28,7 +32,7 @@ class ContentScript {
 
             this.logger.logMessage(cardInfo);
 
-            if (!loadNotesEnabled) {
+            if (showNotes) {
                 this.cardInfoRepository.getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
                     this.logger.logMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
 
@@ -37,8 +41,6 @@ class ContentScript {
             }
 
         });
-
-        this.setLoadNotesEnabled(!loadNotesEnabled);
     }
 
     getLoadNotesEnabled = () => {
@@ -96,6 +98,9 @@ class ContentScript {
         switch (message.command) {
             case constants.Command_LoadNotes:
                 this.toggleNotes();
+                break;
+            case constants.Command_ShowHideNotes:
+                this.showHideNotes();
                 break;
             case constants.Command_ToggleFocusMode:
                 this.toggleFocusMode();
