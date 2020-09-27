@@ -6,6 +6,7 @@ let logger = new Logger();
 logger.logMessage("popup.js loaded");
 
 let btnLoadNotes = document.getElementById('loadNotes');
+let btnShowRecent = document.getElementById('showRecent');
 let btnLoadNotesBacklog = document.getElementById('loadNotesBacklog');
 let btnFocusMode = document.getElementById('focusMode');
 let btnClearAllNotes = document.getElementById('clearAllNotes');
@@ -20,14 +21,18 @@ const sendMessage = (command, arg) => {
     });
 }
 
-btnLoadNotes.onclick = function(element) {
+btnLoadNotes.onclick = function() {
     sendMessage(constants.Command_LoadNotes);
 };
 
-btnFocusMode.onclick = function(element) {
+btnShowRecent.onclick = function() {
+    sendMessage(constants.Command_ShowRecent);
+};
+
+btnFocusMode.onclick = function() {
     sendMessage(constants.Command_ToggleFocusMode);
 };
 
-btnClearAllNotes.onclick = function(element) {
+btnClearAllNotes.onclick = function() {
     sendMessage(constants.Command_ClearNotes);
 };

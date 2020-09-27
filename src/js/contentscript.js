@@ -2,6 +2,7 @@ import * as constants from './constants';
 import Logger from './logger';
 import CardInfoRepository from './cardinforepository';
 import CardDomManipulator from './carddommanipulator';
+import JiraIssueInfoRepository from './jiraIssueInfoRepository';
 
 class ContentScript {
 
@@ -14,11 +15,34 @@ class ContentScript {
         this.logger = new Logger();
         this.cardInfoRepository = new CardInfoRepository();
         this.cardDomManipulator = new CardDomManipulator(this.logger);
+        this.jiraIssueInfoRepository = new JiraIssueInfoRepository(this.logger);
     }
 
     toggleNotes = () => {
         this.setLoadNotesEnabled(!this.getLoadNotesEnabled());
         this.showHideNotes();
+    }
+
+    showRecent = () => {
+        let isBacklogMode = $('.ghx-backlog').length > 0;
+
+        let cardIds = this.cardDomManipulator.getAllCardIds(isBacklogMode);
+
+        $(cardIds).each((index, cardId) => {
+
+            this.jiraIssueInfoRepository.getIssueUpdatedFromCache(cardId, (issueKey, value) => {
+
+                var updated = new Date(value);
+
+                var recentDateLimit = new Date();
+                recentDateLimit.setDate(recentDateLimit.getDate() - 2);
+
+                if ((updated.getTime() - recentDateLimit.getTime()) < 0) {
+                    $("div.ghx-issue[data-issue-key='" + cardId + "']").hide();
+                }
+            });
+
+        })
     }
 
     showHideNotes = () => {
@@ -30,16 +54,15 @@ class ContentScript {
 
         $(cardsInfo).each((index, cardInfo) => {
 
-            this.logger.logMessage(cardInfo);
 
             if (showNotes) {
                 this.cardInfoRepository.getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
-                    this.logger.logMessage(`Current value for card ${cardInfoKey} = ${currentCardNote}`);
 
                     this.cardDomManipulator.appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
                 });
             }
 
+            this.jiraIssueInfoRepository.addIssueUpdatedToCache(cardInfo);
         });
     }
 
@@ -81,9 +104,7 @@ class ContentScript {
 
     toggleHighlight = (index) => {
         var elements = document.querySelectorAll('.ghx-backlog-card:hover[data-issue-id], .ghx-issue:hover[data-issue-id]');
-        //var elements = document.querySelectorAll('.ghx-issue:hover[data-issue-id]');
 
-        this.logger.logMessage(`Hover: ${elements.length}`);
 
         $(elements).removeClass(`cardHighlight1`);
         $(elements).removeClass(`cardHighlight2`);
@@ -93,11 +114,13 @@ class ContentScript {
     }
 
     messageReceived = (message) => {
-        this.logger.logMessage(message.command);
 
         switch (message.command) {
             case constants.Command_LoadNotes:
                 this.toggleNotes();
+                break;
+            case constants.Command_ShowRecent:
+                this.showRecent();
                 break;
             case constants.Command_ShowHideNotes:
                 this.showHideNotes();

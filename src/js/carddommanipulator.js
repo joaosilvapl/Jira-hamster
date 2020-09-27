@@ -13,7 +13,6 @@ export default class CardDomManipulator {
 
         var cardIdElements = $(cardSelector);
 
-        this.logger.logMessage(`Found cards: ${cardIdElements.length}`);
 
         var cardsInfo = [];
 
