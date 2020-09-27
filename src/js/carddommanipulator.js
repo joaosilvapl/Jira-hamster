@@ -25,7 +25,11 @@ export default class CardDomManipulator {
         return `cardDiv-${cardId}`;
     }
 
-    buildCardElement = (cardId, cardDivId, note, isBacklogMode) => {
+    buildCardHistoryDivId = (cardId) => {
+        return `cardHistoryDiv-${cardId}`;
+    }
+
+    buildCardElement = (cardId, cardDivId, note, isBacklogMode, cardClassName) => {
         let noteText;
         let noteClass;
         if (note && note != '') {
@@ -41,7 +45,7 @@ export default class CardDomManipulator {
         }
 
         return `<div id="${cardDivId}"
-                 class='cardNote ${noteClass}' 
+                 class='${cardClassName} ${noteClass}' 
                  onclick='event.stopPropagation();showModal("${cardId}");return false;'>
                  ${noteText}
                  </div>`;
@@ -50,6 +54,16 @@ export default class CardDomManipulator {
     appendNoteToCard = (cardId, note, isBacklogMode) => {
 
         let cardDivId = this.buildCardDivId(cardId);
+        this.appendNoteToCardInternal(cardId, cardDivId, note, isBacklogMode, 'cardNote');
+    }
+
+    appendHistoryNoteToCard = (cardId, note, isBacklogMode) => {
+
+        let cardHistoryDivId = this.buildCardHistoryDivId(cardId);
+        this.appendNoteToCardInternal(cardId, cardHistoryDivId, note, isBacklogMode, 'cardNoteHistory');
+    }
+
+    appendNoteToCardInternal = (cardId, cardDivId, note, isBacklogMode, cardClassName) => {
 
         if ($(`#${cardDivId}`).length > 0) {
             //A note already exists for the given card. It should not be re-added
@@ -67,7 +81,7 @@ export default class CardDomManipulator {
             let cardDiv = $(cardDivs[0]);
 
             this.logger.logMessage(`Adding note div for id=${cardId}`);
-            var cardElement = this.buildCardElement(cardId, cardDivId, note, isBacklogMode);
+            var cardElement = this.buildCardElement(cardId, cardDivId, note, isBacklogMode, cardClassName);
 
             if (isBacklogMode) {
                 let cardRowElements = cardDiv.find('div.ghx-row.ghx-plan-main-fields');

@@ -14,23 +14,58 @@ export default class JiraIssueInfoRepository {
 
     }
 
-    addIssueUpdatedToCache = (issueKey) => {
+    getIssueHistory = (issueKey, loadData, callback) => {
+
+        if (!loadData) {
+            this.getIssueUpdatedFromCache(issueKey, (issueKey, value) => {
+
+                if (value) {
+                    callback(issueKey, value);
+                    return;
+                }
+
+                this.getIssueHistoryFromJira(issueKey, callback);
+
+            });
+        } else {
+            this.getIssueHistoryFromJira(issueKey, callback);
+        }
+
+    }
+
+    getIssueHistoryFromJira = (issueKey, callback) => {
         $.ajax({
             url: "/rest/api/3/issue/" + issueKey + "?fields=updated&expand=changelog",
             type: "GET",
             dataType: "json",
             contentType: "application/json",
-            success: this.addIssueUpdatedToCacheCallback,
+            success: (issueData) => this.addIssueUpdatedToCacheCallback(issueKey, issueData, callback),
             error: function(response) {
                 this.logger.logMessage("Error while loading issue updated date. REST call response: " + response);
             }
         });
     }
 
-    addIssueUpdatedToCacheCallback = (issueData) => {
+    addIssueUpdatedToCacheCallback = (issueKey, issueData, callback) => {
 
         if (issueData) {
-            this.saveIssueUpdatedToCache(issueData.key, issueData.fields["updated"]);
+
+            let lastUpdated = issueData.fields["updated"];
+
+            let historyData = [];
+
+            issueData.changelog.histories.forEach((item) => {
+                let author = item.author.displayName;
+
+                if (!historyData.includes(author))
+                    historyData.push(author);
+            });
+
+            let d = { "lastUpdated": lastUpdated, "historyData": historyData }
+
+            this.saveIssueUpdatedToCache(issueKey, d);
+
+            callback(issueKey, d);
         }
     }
 

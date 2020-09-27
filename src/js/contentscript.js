@@ -19,8 +19,9 @@ class ContentScript {
     }
 
     toggleNotes = () => {
+        let loadData = !this.getLoadNotesEnabled();
         this.setLoadNotesEnabled(!this.getLoadNotesEnabled());
-        this.showHideNotes();
+        this.showHideNotes(loadData);
     }
 
     showRecent = () => {
@@ -35,7 +36,7 @@ class ContentScript {
                 var updated = new Date(value);
 
                 var recentDateLimit = new Date();
-                recentDateLimit.setDate(recentDateLimit.getDate() - 2);
+                recentDateLimit.setDate(recentDateLimit.getDate() - 4);
 
                 if ((updated.getTime() - recentDateLimit.getTime()) < 0) {
                     $("div.ghx-issue[data-issue-key='" + cardId + "']").hide();
@@ -45,7 +46,7 @@ class ContentScript {
         })
     }
 
-    showHideNotes = () => {
+    showHideNotes = (loadData) => {
         let showNotes = this.getLoadNotesEnabled();
 
         let isBacklogMode = $('.ghx-backlog').length > 0;
@@ -54,20 +55,34 @@ class ContentScript {
 
         $(cardsInfo).each((index, cardInfo) => {
 
-
             if (showNotes) {
                 this.cardInfoRepository.getCardInfo(cardInfo, (cardInfoKey, currentCardNote) => {
 
                     this.cardDomManipulator.appendNoteToCard(cardInfo, currentCardNote, isBacklogMode);
                 });
-            }
 
-            this.jiraIssueInfoRepository.addIssueUpdatedToCache(cardInfo);
+                this.jiraIssueInfoRepository.getIssueHistory(cardInfo, loadData, (issueKey, historyData) => {
+
+                    let cardNote = historyData.lastUpdated;
+
+                    historyData.historyData.forEach(item => {
+                        cardNote += "; " + item;
+                    });
+
+                    this.cardDomManipulator.appendHistoryNoteToCard(issueKey, cardNote, isBacklogMode);
+                });
+            }
         });
     }
 
     getLoadNotesEnabled = () => {
-        let isEnabledTextValue = $('#jiraHamsterLoadNotesEnabled')[0].value;
+        let element = $('#jiraHamsterLoadNotesEnabled');
+
+        if (!element || element.length === 0) {
+            return false;
+        }
+
+        let isEnabledTextValue = element[0].value;
 
         return isEnabledTextValue === "1";
     }
